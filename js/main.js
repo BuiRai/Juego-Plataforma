@@ -2,6 +2,8 @@ var stage, fondo;
 var keyboard = {};
 var intv;
 var personaje;
+var grav = 0.8;
+var val_reb = 0;
 
 //Recibe como parametro un JSon
 stage = new Kinetic.Stage({
@@ -17,6 +19,7 @@ function nivelUno(){
 	personaje.setX(0);
 	personaje.setY(stage.getHeight() - personaje.getHeight());
 	personaje.limiteDer = stage.getWidth() - personaje.getWidth(); 
+	personaje.limiteTope = stage.getHeight();
 	fondo.add(personaje);
 	stage.add(fondo);
 }
@@ -29,6 +32,10 @@ function moverPersonaje(){
 	//39 : flecha derecha
 	if (keyboard[39]) {
 		personaje.caminar();
+	}
+	//38 : flecha arriba
+	if (keyboard[38]  && personaje.contador < 1) {
+		personaje.saltar();
 	}
 }
 
@@ -82,6 +89,10 @@ function hit(a,b){
 	return hit;
 }
 
+function aplicarFuerzas(){
+	personaje.aplicarGravedad(grav, val_reb);
+}
+
 addKeyBoardEvents();
 nivelUno();
 /*setInterval() recibe dos parámetros, una función, y un número 
@@ -89,6 +100,7 @@ representado por milisegundos, tiempo en que se ejecutara la función
 del primer parametro*/
 intv = setInterval(frameLoop, 1000/20);
 function frameLoop(){
+	aplicarFuerzas();
 	moverPersonaje();
 	stage.draw();
 }

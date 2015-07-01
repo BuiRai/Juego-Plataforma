@@ -6,14 +6,25 @@ function Heroe(){
 	this.setHeight(70); //Alto del heroe
 	this.vx = 15; //Velocidad X del heroe
 	this.vy = 0; //Velocidad X del heroe
+	this.limiteDer = 0;
 	this.direction = 1;
 	this.contador = 0;
+	this.setFill("red");
 	
 	this.caminar = function(){
-
+		/*move() : Método de kinetic para mover un personaje, recibe:
+		1o: cuanta distancia se movera en X
+		2o: cuanta distancia se movera en Y*/
+		this.move(this.vx, 0);
+		if (this.getX() > this.limiteDer) {
+			this.move(this.limiteDer - this.getX(), 0);
+		}
 	}
 	this.retroceder = function(){
-		
+		this.move(-15, 0);
+		if (this.getX() < 0) {
+			this.move(- this.getX(), 0);
+		}
 	}
 	this.saltar = function(){
 		

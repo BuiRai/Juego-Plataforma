@@ -1,5 +1,7 @@
-var stage;
+var stage, fondo;
 var keyboard = {};
+var intv;
+var personaje;
 
 //Recibe como parametro un JSon
 stage = new Kinetic.Stage({
@@ -8,6 +10,27 @@ stage = new Kinetic.Stage({
 	width: 960,
 	height: 500
 });
+
+function nivelUno(){
+	fondo = new Kinetic.Layer();
+	personaje = new Heroe();
+	personaje.setX(0);
+	personaje.setY(stage.getHeight() - personaje.getHeight());
+	personaje.limiteDer = stage.getWidth() - personaje.getWidth(); 
+	fondo.add(personaje);
+	stage.add(fondo);
+}
+
+function moverPersonaje(){
+	//37 : flecha izquierda
+	if (keyboard[37]) {
+		personaje.retroceder();
+	}
+	//39 : flecha derecha
+	if (keyboard[39]) {
+		personaje.caminar();
+	}
+}
 
 function addKeyBoardEvents(){
 	addEvent(document, "keydown", function(e){
@@ -56,4 +79,16 @@ function hit(a,b){
 			hit = true;
 		}
 	}
+	return hit;
+}
+
+addKeyBoardEvents();
+nivelUno();
+/*setInterval() recibe dos parámetros, una función, y un número 
+representado por milisegundos, tiempo en que se ejecutara la función 
+del primer parametro*/
+intv = setInterval(frameLoop, 1000/20);
+function frameLoop(){
+	moverPersonaje();
+	stage.draw();
 }

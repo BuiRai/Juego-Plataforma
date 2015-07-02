@@ -1,9 +1,14 @@
-var stage, fondo;
+var stage, fondo, grupoAssets;
 var keyboard = {};
 var intv;
 var personaje;
 var grav = 0.8;
 var val_reb = 0;
+
+grupoAssets = new Kinetic.Group({
+	x:0,
+	y:0
+});
 
 //Recibe como parametro un JSon
 stage = new Kinetic.Stage({
@@ -15,12 +20,17 @@ stage = new Kinetic.Stage({
 
 function nivelUno(){
 	fondo = new Kinetic.Layer();
+	/*Enemigos*/
+	grupoAssets.add(new Enemigo(200,stage.getHeight() - 75));
+	grupoAssets.add(new Enemigo(850,stage.getHeight()/3.9 - 60));
+
 	personaje = new Heroe();
 	personaje.setX(0);
 	personaje.setY(stage.getHeight() - personaje.getHeight());
 	personaje.limiteDer = stage.getWidth() - personaje.getWidth(); 
 	personaje.limiteTope = stage.getHeight();
 	fondo.add(personaje);
+	fondo.add(grupoAssets);
 	stage.add(fondo);
 }
 

@@ -1,3 +1,98 @@
+var framesP = {
+	estatico: [{
+		x: 30,
+        y: 0,
+        width: 65,
+        height: 79
+	}],
+    caminar: [{
+        x: 30,
+        y: 0,
+        width: 65,
+        height: 79
+    }, {
+        x: 109,
+        y: 0,
+        width: 65,
+        height: 79
+    }, {
+        x: 188,
+        y: 0,
+        width: 65,
+		height: 79
+	}, {
+		x: 267,
+		y: 0,
+		width: 65,
+		height: 79
+	}, {
+		x: 346,
+		y: 0,
+		width: 65,
+		height: 79
+	}, {
+		x: 425,
+		y: 0,
+		width: 65,
+		height: 79
+	}],
+    saltarFrames: [{
+        x: 109,
+        y: 70,
+        width: 65,
+        height: 79
+    }, {
+        x: 188,
+        y: 70,
+        width: 65,
+        height: 79
+    },{
+        x: 188,
+        y: 70,
+        width: 65,
+        height: 79
+    }, {
+        x: 267,
+        y: 70,
+        width: 65,
+		height: 79
+	}, {
+        x: 267,
+        y: 70,
+        width: 65,
+		height: 79
+	}, {
+		x: 346,
+		y: 70,
+		width: 65,
+		height: 79
+	}, {
+		x: 346,
+		y: 70,
+		width: 65,
+		height: 79
+	}, {
+		x: 425,
+		y: 70,
+		width: 65,
+		height: 79
+	},{
+		x: 425,
+		y: 70,
+		width: 65,
+		height: 79
+	},{
+		x: 425,
+		y: 70,
+		width: 65,
+		height: 79
+	},{
+		x: 425,
+		y: 70,
+		width: 65,
+		height: 79
+	}]
+};
 var stage, fondo, grupoAssets, puntaje;
 var keyboard = {};
 var intv;
@@ -5,6 +100,17 @@ var personaje;
 var grav = 0.8;
 var val_reb = 0;
 var juego = new Game();
+/*Imágenes*/
+var imgEnemy = new Image();
+imgEnemy.src = "imgs/enemy.png";
+var imgMoneda = new Image();
+imgMoneda.src = "imgs/moneda.png";
+var imgPlata = new Image();
+imgPlata.src = "imgs/pattern.png";
+var imgPuerta = new Image();
+imgPuerta.src = "imgs/puerta.png";
+var imgLlave = new Image();
+imgLlave.src = "imgs/llave.png";
 
 grupoAssets = new Kinetic.Group({
 	x:0,
@@ -37,32 +143,32 @@ function nivelUno(){
 	juego.llave = true;
 	fondo = new Kinetic.Layer();
 	/*Enemigos*/
-	grupoAssets.add(new Enemigo(200,stage.getHeight()-75));
-	grupoAssets.add(new Enemigo(850,stage.getHeight()/3.9-60));
-	grupoAssets.add(new Enemigo(170,stage.getHeight()/3-60));
-	grupoAssets.add(new Enemigo(1020,stage.getHeight()-75));
-	grupoAssets.add(new Enemigo(1120,stage.getHeight()-75));
-	grupoAssets.add(new Enemigo(1220,stage.getHeight()-75));
+	grupoAssets.add(new Enemigo(200,stage.getHeight()-75, imgEnemy));
+	grupoAssets.add(new Enemigo(850,stage.getHeight()/3.9-60, imgEnemy));
+	grupoAssets.add(new Enemigo(170,stage.getHeight()/3-60, imgEnemy));
+	grupoAssets.add(new Enemigo(1020,stage.getHeight()-75, imgEnemy));
+	grupoAssets.add(new Enemigo(1120,stage.getHeight()-75, imgEnemy));
+	grupoAssets.add(new Enemigo(1220,stage.getHeight()-75, imgEnemy));
 
 	/*Plataforma (piso)*/
-	var piso = new Plataforma(0,stage.getHeight()-15);
+	var piso = new Plataforma(0,stage.getHeight()-15, imgPlata);
 	piso.setWidth(stage.getWidth() * 2);
 	grupoAssets.add(piso);
 	/*Plataforma (en el aire)*/
-	grupoAssets.add(new Plataforma(20,stage.getHeight()/1.5));
-	grupoAssets.add(new Plataforma(190,stage.getHeight()/3));
-	grupoAssets.add(new Plataforma(510,stage.getHeight()/1.6));
-	grupoAssets.add(new Plataforma(870,stage.getHeight()/3.9));
+	grupoAssets.add(new Plataforma(20,stage.getHeight()/1.5, imgPlata));
+	grupoAssets.add(new Plataforma(190,stage.getHeight()/3, imgPlata));
+	grupoAssets.add(new Plataforma(510,stage.getHeight()/1.6, imgPlata));
+	grupoAssets.add(new Plataforma(870,stage.getHeight()/3.9, imgPlata));
 
 	/*Monedas*/
-	grupoAssets.add(new Moneda(350, stage.getHeight()/3-130));
-	grupoAssets.add(new Moneda(650, stage.getHeight()/2-130));
-	grupoAssets.add(new Moneda(80, stage.getHeight()-80));
-	grupoAssets.add(new Moneda(910, stage.getHeight()/6));
-	grupoAssets.add(new Moneda(1220, stage.getHeight()-80));
+	grupoAssets.add(new Moneda(350, stage.getHeight()/3-130, imgMoneda));
+	grupoAssets.add(new Moneda(650, stage.getHeight()/2-130, imgMoneda));
+	grupoAssets.add(new Moneda(80, stage.getHeight()-80, imgMoneda));
+	grupoAssets.add(new Moneda(910, stage.getHeight()/6, imgMoneda));
+	grupoAssets.add(new Moneda(1220, stage.getHeight()-80, imgMoneda));
 
 	/*Puerta*/
-	grupoAssets.add(new Puerta(910, stage.getHeight()-85));
+	grupoAssets.add(new Puerta(910, stage.getHeight()-85, imgPuerta));
 
 	/*Heroe*/
 	personaje = new Heroe();

@@ -16,7 +16,8 @@ function Enemigo(x,y){
 	}
 
 	this.mover = function(){
-		
+		this.contador++;
+		this.setX( this.getX() + Math.sin( this.contador * Math.PI / 50 ) *5 );
 	}
 }
 

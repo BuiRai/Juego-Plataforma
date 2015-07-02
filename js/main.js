@@ -1,9 +1,10 @@
-var stage, fondo, grupoAssets;
+var stage, fondo, grupoAssets, puntaje;
 var keyboard = {};
 var intv;
 var personaje;
 var grav = 0.8;
 var val_reb = 0;
+var juego = new Game();
 
 grupoAssets = new Kinetic.Group({
 	x:0,
@@ -18,20 +19,67 @@ stage = new Kinetic.Stage({
 	height: 500
 });
 
+/*Crear un objeto texto (del Kinetic) para dibujar sobre el Canvas, 
+recibe un objeto JSon*/
+puntaje = new Kinetic.Text({
+	text: "Puntaje: 0", //El texto a dibujar
+	height: 25,
+	width: 150,
+	x: stage.getWidth() - 150, //Posición X
+	y: 0, //Posición Y
+	fill: "222", //El color con el que se dibujara
+	fontFamly: "Arial",
+	fontSize: 20
+});
+
 function nivelUno(){
+	juego.puntaje = 0;
+	juego.llave = true;
 	fondo = new Kinetic.Layer();
 	/*Enemigos*/
-	grupoAssets.add(new Enemigo(200,stage.getHeight() - 75));
-	grupoAssets.add(new Enemigo(850,stage.getHeight()/3.9 - 60));
+	grupoAssets.add(new Enemigo(200,stage.getHeight()-75));
+	grupoAssets.add(new Enemigo(850,stage.getHeight()/3.9-60));
+	grupoAssets.add(new Enemigo(170,stage.getHeight()/3-60));
+	grupoAssets.add(new Enemigo(1020,stage.getHeight()-75));
+	grupoAssets.add(new Enemigo(1120,stage.getHeight()-75));
+	grupoAssets.add(new Enemigo(1220,stage.getHeight()-75));
 
+	/*Plataforma (piso)*/
+	var piso = new Plataforma(0,stage.getHeight()-15);
+	piso.setWidth(stage.getWidth() * 2);
+	grupoAssets.add(piso);
+	/*Plataforma (en el aire)*/
+	grupoAssets.add(new Plataforma(20,stage.getHeight()/1.5));
+	grupoAssets.add(new Plataforma(190,stage.getHeight()/3));
+	grupoAssets.add(new Plataforma(510,stage.getHeight()/1.6));
+	grupoAssets.add(new Plataforma(870,stage.getHeight()/3.9));
+
+	/*Monedas*/
+	grupoAssets.add(new Moneda(350, stage.getHeight()/3-130));
+	grupoAssets.add(new Moneda(650, stage.getHeight()/2-130));
+	grupoAssets.add(new Moneda(80, stage.getHeight()-80));
+	grupoAssets.add(new Moneda(910, stage.getHeight()/6));
+	grupoAssets.add(new Moneda(1220, stage.getHeight()-80));
+
+	/*Puerta*/
+	grupoAssets.add(new Puerta(910, stage.getHeight()-85));
+
+	/*Heroe*/
 	personaje = new Heroe();
 	personaje.setX(0);
 	personaje.setY(stage.getHeight() - personaje.getHeight());
 	personaje.limiteDer = stage.getWidth() - personaje.getWidth(); 
 	personaje.limiteTope = stage.getHeight();
+
 	fondo.add(personaje);
 	fondo.add(grupoAssets);
+	fondo.add(puntaje);
 	stage.add(fondo);
+
+	/*setInterval() recibe dos parámetros, una función, y un número 
+	representado por milisegundos, tiempo en que se ejecutara la 
+	función del primer parametro*/
+	intv = setInterval(frameLoop, 1000/20);
 }
 
 function moverPersonaje(){
@@ -99,18 +147,73 @@ function hit(a,b){
 	return hit;
 }
 
+function nivelDos(){
+	console.log("Bienvenido al nivel dos");
+}
+
+function moverEnemigos(){
+	var enemigos = grupoAssets.children;
+	for(index in enemigos){
+		var enemigo = enemigos[index];
+		if ( enemigo instanceof Enemigo) {
+			enemigo.mover();	
+		}
+	}
+}
+
 function aplicarFuerzas(){
 	personaje.aplicarGravedad(grav, val_reb);
 }
 
+function detectarColPlataforma(){
+	var plataformas = grupoAssets.children;
+	for(index in plataformas){
+		var plataforma = plataformas[index];
+
+		if ( hit( plataforma, personaje ) ) {
+			/*Si es un enemigo, entonces se procede a tomar alguna de las 
+			siguientes dos decisiones:*/
+			if ( plataforma instanceof Enemigo) {
+				/*Si venimos de arriba matamos y removemos al enemigo*/
+				if (personaje.vy > 2 && personaje.getY() < plataforma.getY() ) {
+					plataforma.remove();
+					juego.puntaje += 5;
+					console.log(juego.puntaje);
+				/*Perdiemos el juego, el enemigo nos mato :'(*/
+				}else{
+					console.log("Perdiste");
+				}
+			}
+			/*Si es una plataforma, entoncces nos quedamos parados encima 
+			de ella*/
+			else if (plataforma instanceof Plataforma && personaje.getY() < plataforma.getY() && personaje.vy >= 0 ) {
+				personaje.contador = 0;
+				personaje.setY(plataforma.getY() - personaje.getHeight());
+				personaje.vy *= val_reb;
+			}
+			else if (plataforma instanceof Moneda) {
+				plataforma.remove();
+				juego.puntaje++;
+			}
+			else if(plataforma instanceof Puerta && juego.llave){
+				if (juego.nivel == 1) nivelDos();
+				if (juego.nivel == 2) console.log("Ganaste");
+			}
+		}
+	}
+}
+
+function actualizarTexto(){
+	puntaje.setText("Puntaje: " + juego.puntaje);
+}
+
 addKeyBoardEvents();
-nivelUno();
-/*setInterval() recibe dos parámetros, una función, y un número 
-representado por milisegundos, tiempo en que se ejecutara la función 
-del primer parametro*/
-intv = setInterval(frameLoop, 1000/20);
+
 function frameLoop(){
 	aplicarFuerzas();
+	actualizarTexto();
+	detectarColPlataforma();
 	moverPersonaje();
+	moverEnemigos();
 	stage.draw();
 }

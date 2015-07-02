@@ -3,11 +3,10 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Juego Plataforma</title>
-	
 </head>
 <body>
 	<div id="game">
-			
+	
 	</div>
 
 	<!--Se pone antes porque una de las librerias debe de cargarse despues del div en donde estará el Canvas-->
@@ -15,6 +14,33 @@
 	<script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.3.2.min.js"></script>
 	<script src="js/Heroe.js"></script>
 	<script src="js/Enemigo.js"></script>
+	<script src="js/Plataforma.js"></script>
+	<script src="js/Moneda.js"></script>
+	<script src="js/Puerta.js"></script>
+	<script src="js/Game.js"></script>
 	<script src="js/main.js"></script>
+	<script>
+		var preloader;
+		/*Arreglo con la dirección de las imágenes*/
+		var imgsAssets = ["imgs/Heroe.png", "imgs/enemy.png", "imgs/moneda.png", "imgs/moneda.png", "imgs/puerta.png", "img/llave.png"];
+		/*Agregar evento al objeto window*/
+		window.addEventListener("load", function(){
+			preloader = new PreloadJS();
+			preloader.onProgress = progresoCarga();
+			cargar();
+		});
+		function cargar(){
+			while(imgsAssets.length > 0){
+				/*shift() remueve el ultimo elemento y lo devuelve*/
+				var url = imgsAssets.shift();
+				preloader.loadFile(url);
+			}
+		}
+		function progresoCarga(){
+			if (preloader.progress == 1) {
+				nivelUno();
+			}
+		}
+	</script>
 </body>
 </html>

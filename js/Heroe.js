@@ -5,7 +5,7 @@ function Heroe(){
 	this.setWidth(40); //Ancho del heroe
 	this.setHeight(70); //Alto del heroe
 	this.vx = 15; //Velocidad X del heroe
-	this.vy = 0; //Velocidad X del heroe
+	this.vy = 0; //Velocidad y del heroe
 	this.limiteDer = 0;
 	var limiteTope = 0;
 	this.direction = 1;

@@ -1,10 +1,12 @@
 var framesP = {
+	//Animación de estar estático
 	estatico: [{
 		x: 30,
         y: 0,
         width: 65,
         height: 79
 	}],
+	//Animación de caminar
     caminar: [{
         x: 30,
         y: 0,
@@ -36,6 +38,7 @@ var framesP = {
 		width: 65,
 		height: 79
 	}],
+	//Animación de saltar (11 frames)
     saltarFrames: [{
         x: 109,
         y: 70,
@@ -99,8 +102,11 @@ var intv;
 var personaje;
 var grav = 0.8;
 var val_reb = 0;
+var bandera = false;
 var juego = new Game();
 /*Imágenes*/
+var imgHeroe = new Image();
+imgHeroe.src = "imgs/Heroe.png";
 var imgEnemy = new Image();
 imgEnemy.src = "imgs/enemy.png";
 var imgMoneda = new Image();
@@ -139,6 +145,8 @@ puntaje = new Kinetic.Text({
 });
 
 function nivelUno(){
+	if (bandera) return;
+	bandera = true;
 	juego.puntaje = 0;
 	juego.llave = true;
 	fondo = new Kinetic.Layer();
@@ -171,7 +179,7 @@ function nivelUno(){
 	grupoAssets.add(new Puerta(910, stage.getHeight()-85, imgPuerta));
 
 	/*Heroe*/
-	personaje = new Heroe();
+	personaje = new Heroe(imgHeroe, framesP);
 	personaje.setX(0);
 	personaje.setY(stage.getHeight() - personaje.getHeight());
 	personaje.limiteDer = stage.getWidth() - personaje.getWidth(); 
@@ -180,8 +188,8 @@ function nivelUno(){
 	fondo.add(personaje);
 	fondo.add(grupoAssets);
 	fondo.add(puntaje);
+	personaje.start();//Comienza a ejecitar la animación
 	stage.add(fondo);
-
 	/*setInterval() recibe dos parámetros, una función, y un número 
 	representado por milisegundos, tiempo en que se ejecutara la 
 	función del primer parametro*/
@@ -189,6 +197,10 @@ function nivelUno(){
 }
 
 function moverPersonaje(){
+	//Si no esta caminando e izquierda o derecha
+	if ( (personaje.getAnimation() != "caminar") && (keyboard[37] || keyboard[39]) ){
+		personaje.setAnimation("caminar");
+	}
 	//37 : flecha izquierda
 	if (keyboard[37]) {
 		personaje.retroceder();
@@ -200,6 +212,10 @@ function moverPersonaje(){
 	//38 : flecha arriba
 	if (keyboard[38]  && personaje.contador < 1) {
 		personaje.saltar();
+	}
+	/*Si el personaje no está saltando*/
+	if (!(keyboard[39] || keyboard[38] || keyboard[37]) && !personaje.estaSaltando) {
+		personaje.setAnimation("estatico");
 	}
 }
 

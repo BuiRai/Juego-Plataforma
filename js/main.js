@@ -285,6 +285,18 @@ function nivelDos(){
 	console.log("Bienvenido al nivel dos");
 }
 
+function moverFondo(){
+	if (personaje.getX() > (stage.getWidth())/2 && keyboard[39]) {
+		personaje.vx = 2;
+		for(i in grupoAssets.children){
+			var asset = grupoAssets.children[i];
+			asset.move(-5,0);
+		}
+	}else{
+		personaje.vx = 10;
+	}
+}
+
 function moverEnemigos(){
 	var enemigos = grupoAssets.children;
 	for(index in enemigos){
@@ -347,6 +359,7 @@ function frameLoop(){
 	aplicarFuerzas();
 	actualizarTexto();
 	detectarColPlataforma();
+	moverFondo();
 	moverPersonaje();
 	moverEnemigos();
 	stage.draw();

@@ -96,7 +96,7 @@ var framesP = {
 		height: 79
 	}]
 };
-var stage, fondo, grupoAssets, puntaje;
+var stage, fondo, grupoAssets, puntaje, imagenFondo;
 var keyboard = {};
 var intv;
 var personaje;
@@ -117,6 +117,8 @@ var imgPuerta = new Image();
 imgPuerta.src = "imgs/puerta.png";
 var imgLlave = new Image();
 imgLlave.src = "imgs/llave.png";
+var imgFondo = new Image();
+imgFondo.src = "imgs/fondo.jpg";
 
 grupoAssets = new Kinetic.Group({
 	x:0,
@@ -139,9 +141,17 @@ puntaje = new Kinetic.Text({
 	width: 150,
 	x: stage.getWidth() - 150, //Posición X
 	y: 0, //Posición Y
-	fill: "222", //El color con el que se dibujara
+	fill: "#f7f7f7", //El color con el que se dibujara
 	fontFamly: "Arial",
 	fontSize: 20
+});
+
+imagenFondo = new Kinetic.Image({
+	x:0,
+	y:0,
+	image: imgFondo,
+	width: stage.getWidth(),
+	height: stage.getHeight()
 });
 
 function nivelUno(){
@@ -185,9 +195,11 @@ function nivelUno(){
 	personaje.limiteDer = stage.getWidth() - personaje.getWidth(); 
 	personaje.limiteTope = stage.getHeight();
 
+	fondo.add(imagenFondo);
 	fondo.add(personaje);
 	fondo.add(grupoAssets);
 	fondo.add(puntaje);
+	console.log(personaje);
 	personaje.start();//Comienza a ejecitar la animación
 	stage.add(fondo);
 	/*setInterval() recibe dos parámetros, una función, y un número 

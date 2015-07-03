@@ -12,8 +12,8 @@ function Heroe(imagen, animaciones){
 	this.vx = 15; //Velocidad X del heroe
 	this.vy = 0; //Velocidad y del heroe
 	this.limiteDer = 0;
-	var limiteTope = 0;
-	this.diSpriteion = 1;
+	this.limiteTope = 0;
+	this.direccion = 1;
 	this.contador = 0;
 	this.attrs.frameRate = 10; //Velocidad de cambio de frames
 	
@@ -24,6 +24,14 @@ function Heroe(imagen, animaciones){
 			2o: cuanta distancia se movera en Y*/
 			this.move(this.vx, 0);
 		}else{
+			/*Regresar el método drawFunc a la normalidad*/
+			this.attrs.drawFunc = function (a){
+				var b=this.attrs.animation,
+				c=this.attrs.index,
+				d=this.attrs.animations[b][c],
+				e=a.getContext(),f=this.attrs.image;
+				f&&e.drawImage(f,d.x,d.y,d.width,d.height,0,0,d.width,d.height)
+			}
 			this.setScale({x:1});
 			this.direccion = true;
 		}
@@ -36,6 +44,14 @@ function Heroe(imagen, animaciones){
 		if (!this.direccion) {
 			this.move(-15, 0);	
 		}else{
+			/*Sobre escribir el método drwFunc()*/
+			this.attrs.drawFunc = function (a){
+				var b=this.attrs.animation,
+				c=this.attrs.index,
+				d=this.attrs.animations[b][c],
+				e=a.getContext(),f=this.attrs.image;
+				f&&e.drawImage(f,d.x,d.y,d.width,d.height,-d.width,0,d.width,d.height)
+			}
 			this.setScale({x:-1});
 			this.direccion = false;
 		}
@@ -46,17 +62,19 @@ function Heroe(imagen, animaciones){
 	}
 	this.saltar = function(){
 		this.estaSaltando = true;
-		this.setAnimation("saltarFrames");
-		this.vy = -20;
-		this.contador++;
-		/*afterFrame recibe dos parametros:
-		1o: Número del frame (en este caso es el de caminar, el 0)
-		2o: Que funcion hara despues de haber llegado al frame que 
-		se le asigno en el primer parámetro*/
-		this.afterFrame(10, function(){
-			this.estaSaltando = false;
-			this.setAnimation("estatico");
-		});
+		if (this.vy <= 2) {
+			this.setAnimation("saltarFrames");
+			this.vy = -20;
+			this.contador++;
+			/*afterFrame recibe dos parametros:
+			1o: Número del frame (en este caso es el de caminar, el 0)
+			2o: Que funcion hara despues de haber llegado al frame que 
+			se le asigno en el primer parámetro*/
+			this.afterFrame(10, function(){
+				this.estaSaltando = false;
+				this.setAnimation("estatico");
+			});
+		}
 	}
 	this.aplicarGravedad = function(gravedad, vRebote){
 		this.vy += gravedad;

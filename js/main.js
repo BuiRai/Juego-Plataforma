@@ -282,7 +282,50 @@ function hit(a,b){
 }
 
 function nivelDos(){
-	console.log("Bienvenido al nivel dos");
+	fondo = new Kinetic.Layer();
+	juego.llave = false;
+	/*Enemigos*/
+	grupoAssets.add(new Enemigo(200,stage.getHeight()/1-5-60, imgEnemy));
+	grupoAssets.add(new Enemigo(850,stage.getHeight()/3.9-60, imgEnemy));
+	grupoAssets.add(new Enemigo(25,stage.getHeight()/3-60, imgEnemy));
+	grupoAssets.add(new Enemigo(500,stage.getHeight()-75, imgEnemy));
+	grupoAssets.add(new Enemigo(6500,stage.getHeight()-75, imgEnemy));
+	grupoAssets.add(new Enemigo(850,stage.getHeight()-75, imgEnemy));
+
+	/*Plataforma (piso)*/
+	var piso = new Plataforma(0,stage.getHeight()-15, imgPlata);
+	piso.setWidth(stage.getWidth() * 2);
+	grupoAssets.add(piso);
+	/*Plataforma (en el aire)*/
+	grupoAssets.add(new Plataforma(190,stage.getHeight()/1.5, imgPlata));
+	grupoAssets.add(new Plataforma(10,stage.getHeight()/3, imgPlata));
+	grupoAssets.add(new Plataforma(310,stage.getHeight()/5, imgPlata));
+	grupoAssets.add(new Plataforma(870,stage.getHeight()/3.9, imgPlata));
+
+	/*Monedas*/
+	grupoAssets.add(new Moneda(350, stage.getHeight()/3-130, imgMoneda));
+
+	/*Puerta*/
+	grupoAssets.add(new Puerta(1800, stage.getHeight()-90, imgPuerta));
+
+	/*Heroe*/
+	personaje = new Heroe(imgHeroe, framesP);
+	personaje.setX(0);
+	personaje.setY(stage.getHeight() - 80);
+	personaje.limiteDer = stage.getWidth() - personaje.getWidth(); 
+	personaje.limiteTope = stage.getHeight();
+
+	fondo.add(imagenFondo);
+	fondo.add(personaje);
+	fondo.add(grupoAssets);
+	fondo.add(puntaje);
+	console.log(personaje);
+	personaje.start();//Comienza a ejecitar la animación
+	stage.add(fondo);
+	/*setInterval() recibe dos parámetros, una función, y un número 
+	representado por milisegundos, tiempo en que se ejecutara la 
+	función del primer parametro*/
+	intv = setInterval(frameLoop, 1000/20);
 }
 
 function moverFondo(){
@@ -342,7 +385,12 @@ function detectarColPlataforma(){
 				juego.puntaje++;
 			}
 			else if(plataforma instanceof Puerta && juego.llave){
-				if (juego.nivel == 1) nivelDos();
+				if (juego.nivel == 1){
+					grupoAssets.removeChildren();
+					window,clearInterval(intv);
+					juego.nivel = 2;
+					nivelDos();
+				}
 				if (juego.nivel == 2) console.log("Ganaste");
 			}
 		}

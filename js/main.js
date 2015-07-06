@@ -308,6 +308,9 @@ function nivelDos(){
 	/*Puerta*/
 	grupoAssets.add(new Puerta(1800, stage.getHeight()-90, imgPuerta));
 
+	/*Llave*/
+	grupoAssets.add(new Llave(850, stage.getHeight()/3.9-60, imgLlave));
+
 	/*Heroe*/
 	personaje = new Heroe(imgHeroe, framesP);
 	personaje.setX(0);
@@ -380,11 +383,19 @@ function detectarColPlataforma(){
 				personaje.setY(plataforma.getY() - personaje.getHeight());
 				personaje.vy *= val_reb;
 			}
+			/*Si es una moneda la quitamos del grupo y aumentamos el
+			puntaje*/
 			else if (plataforma instanceof Moneda) {
 				plataforma.remove();
 				juego.puntaje++;
 			}
-			else if(plataforma instanceof Puerta && juego.llave){
+			/*Si es una llave se pone true en el juego y la removemos
+			del grupo de assets*/
+			else if (plataforma instanceof Llave) {
+				plataforma.remove();
+				juego.llave = true;
+				continue;
+			}else if(plataforma instanceof Puerta && juego.llave){
 				if (juego.nivel == 1){
 					grupoAssets.removeChildren();
 					window,clearInterval(intv);

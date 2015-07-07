@@ -3,10 +3,50 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Juego Plataforma</title>
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Jura:400,600">
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Black+Ops+One">
+	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<div id="game">
+	<div id="info" class="screen">
+		<img src="imgs/personajeF.png" class="p">
+		<div class="datos">
+			<h1>Plataformas en el espacio</h1>
+			<button class="btn start" id="otro">Iniciar</button>
+			<p>
+				<h3>Instrucciones</h3>
+				<p>Mover personaje con flechas</p>
+				<p>Saltar flecha arriba</p>
+			</p>
+		</div>
+	</div>
+	<div id="win" class="screen">
+		<img src="imgs/personajeF.png" class="p">
+		<div class="datos">
+			<h1>¡GANASTE!</h1>
+			<button class="btn start" id="otro">Juega de nuevo</button>
+			<p>
+				<h3>Puntaje</h3>
+				<p id="score"></p>
+			</p>
+		</div>
+	</div>
+	<div id="lose" class="screen">
+		<img src="imgs/personajeF.png" class="p">
+		<div class="datos">
+			<h1>Perdiste</h1>
+			<p>Pero puedes iniciar de nuevo</p>
+			<button class="btn start" id="algo">Reintentar</button>
+			<p>
+				<h3>Instrucciones</h3>
+				<p>Mover personaje con flechas</p>
+				<p>Saltar flecha arriba</p>
+			</p>
+		</div>
+	</div>
 	
+
+	<div id="game">
 	</div>
 
 	<!--Se pone antes porque una de las librerias debe de cargarse despues del div en donde estará el Canvas-->
@@ -29,6 +69,11 @@
 			preloader = new PreloadJS();
 			preloader.onProgress = progresoCarga;
 			cargar();
+			var iniciadores = document.getElementsByClassName("start");
+			for( i in iniciadores){
+				var boton = iniciadores[i];
+				boton.addEventListener("click", iniciarJuego);
+			}
 		});
 		function cargar(){
 			while(imgsAssets.length > 0){
@@ -39,8 +84,15 @@
 		}
 		function progresoCarga(){
 			if (preloader.progress == 1) {
-				nivelUno();
+				//nivelUno();
+				document.querySelector("#info").style.display = "block";
 			}
+		}
+		function iniciarJuego(){
+			document.querySelector("#info").style.display = "none";
+			document.querySelector("#lose").style.display = "none";
+			document.querySelector("#win").style.display = "none";
+			nivelUno();
 		}
 	</script>
 </body>

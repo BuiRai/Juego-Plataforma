@@ -155,8 +155,8 @@ imagenFondo = new Kinetic.Image({
 });
 
 function nivelUno(){
+	juego.puntaje = 0;
 	if (bandera) return;
-	bandera = true;
 	juego.puntaje = 0;
 	juego.llave = true;
 	fondo = new Kinetic.Layer();
@@ -371,9 +371,13 @@ function detectarColPlataforma(){
 					plataforma.remove();
 					juego.puntaje += 5;
 					console.log(juego.puntaje);
-				/*Perdiemos el juego, el enemigo nos mato :'(*/
+				/*Perdimos el juego, el enemigo nos mato :'(*/
 				}else{
-					console.log("Perdiste");
+					grupoAssets.removeChildren();
+					document.querySelector("#lose").style.display = "block";
+					document.querySelector("#game").style.display = "none";
+					window.clearInterval(intv);
+					bandera = false;
 				}
 			}
 			/*Si es una plataforma, entoncces nos quedamos parados encima 
@@ -402,7 +406,14 @@ function detectarColPlataforma(){
 					juego.nivel = 2;
 					nivelDos();
 				}
-				if (juego.nivel == 2) console.log("Ganaste");
+				else if (juego.nivel == 2){
+					grupoAssets.removeChildren();
+					document.querySelector("#win").style.display = "block";
+					document.querySelector("#game").style.display = "none";
+					document.querySelector("#score").innerHTML = juego.puntaje;
+					window.clearInterval(intv);
+					bandera = false;
+				}
 			}
 		}
 	}
